@@ -42,8 +42,8 @@ export default function AttendancePage() {
     finally  { setLoading(false); }
   };
 
-  // ✅ Aise karo
-useEffect(() => { load(); }, [filters, page]); // eslint-disable-line react-hooks/exhaustive-deps
+
+useEffect(() => { load(); }, [filters, page]); 
 
   return (
     <div className="page">

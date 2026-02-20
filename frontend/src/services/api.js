@@ -75,6 +75,7 @@ export const attendanceAPI = {
   getToday: ()      => api.get('/attendance/today'),
   getAll:   (p)     => api.get('/attendance', { params: p }),
   getStats: (p)     => api.get('/attendance/stats', { params: p }),
+   getAllAdmin:   (p)     => api.get('/attendance/all', { params: p }), // ← Add karo
 };
 
 export const tasksAPI = {
@@ -83,6 +84,7 @@ export const tasksAPI = {
   getById: (id)      => api.get(`/tasks/${id}`),
   update:  (id, d)   => api.patch(`/tasks/${id}`, d),
   delete:  (id)      => api.delete(`/tasks/${id}`),
+   getAllAdmin:   (params)=> api.get('/tasks/all', { params }), // ← Add karo
 };
 
 export default api;

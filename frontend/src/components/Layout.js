@@ -6,6 +6,8 @@ export default function Layout({ children }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const isAdminOrManager = user?.role === 'admin' || user?.role === 'manager';
+
   const handleLogout = async () => {
     await logout();
     toast.success('Logged out');
@@ -29,9 +31,51 @@ export default function Layout({ children }) {
         </div>
 
         <ul className="sidebar-nav">
-          <li><NavLink to="/dashboard"  className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>🏠 Dashboard</NavLink></li>
-          <li><NavLink to="/attendance" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>🗓️ Attendance</NavLink></li>
-          <li><NavLink to="/tasks"      className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>📋 Tasks</NavLink></li>
+
+          {/* ── Employee Menu ── */}
+          <li style={{ fontSize: '11px', color: '#818cf8', padding: '8px 12px 4px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+            My Menu
+          </li>
+          <li>
+            <NavLink to="/dashboard" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+              🏠 Dashboard
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/attendance" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+              🗓️ My Attendance
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/tasks" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+              📋 My Tasks
+            </NavLink>
+          </li>
+
+          {/* ── Admin / Manager Menu ── */}
+          {isAdminOrManager && (
+            <>
+              <li style={{
+                fontSize: '11px', color: '#818cf8',
+                padding: '16px 12px 4px',
+                textTransform: 'uppercase', letterSpacing: '1px',
+                borderTop: '1px solid #312e81', marginTop: '12px'
+              }}>
+                Admin Panel
+              </li>
+              <li>
+                <NavLink to="/admin/attendance" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                  👥 All Attendance
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/admin/tasks" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+                  📊 All Tasks
+                </NavLink>
+              </li>
+            </>
+          )}
+
         </ul>
 
         <div className="sidebar-footer">

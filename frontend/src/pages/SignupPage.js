@@ -32,7 +32,7 @@ export default function SignupPage() {
     }
   };
 
-  const f = (name) => ({
+  const formInput = (name) => ({
     value: form[name],
     onChange: (e) => setForm(p => ({ ...p, [name]: e.target.value })),
     className: `form-input ${errors[name] ? 'input-error' : ''}`,
@@ -50,25 +50,25 @@ export default function SignupPage() {
           {errors.general && <div className="alert alert-error">{errors.general}</div>}
           <div className="form-group">
             <label>Full Name</label>
-            <input type="text" required placeholder="Your name" {...f('name')} />
+            <input type="text" required placeholder="Your name" {...formInput('name')} />
             {errors.name && <span className="field-error">{errors.name}</span>}
           </div>
           <div className="form-group">
             <label>Email Address</label>
-            <input type="email" required placeholder="Enter your email" {...f('email')} />
+            <input type="email" required placeholder="Enter your email" {...formInput('email')} />
             {errors.email && <span className="field-error">{errors.email}</span>}
           </div>
           <div className="form-group">
             <label>Password</label>
-            <input type="password" required placeholder="Please enter your password" {...f('password')} />
+            <input type="password" required placeholder="Please enter your password" {...formInput('password')} />
             {errors.password && <span className="field-error">{errors.password}</span>}
           </div>
           <div className="form-group">
             <label>Role</label>
-            <select {...f('role')}>
+            <select {...formInput('role')}>
               <option value="employee">Employee</option>
               <option value="manager">Manager</option>
-              <option value="admin">Admin</option>
+           
             </select>
           </div>
           <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
