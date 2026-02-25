@@ -8,7 +8,6 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const morgan = require("morgan");
-const rateLimit = require("express-rate-limit");
 
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth.routes");
@@ -20,7 +19,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 app.set("trust proxy", 1);
 
-// Security
+// ── Security
 app.use(
   helmet({
     crossOriginEmbedderPolicy: false,
@@ -45,27 +44,6 @@ app.use(
   }),
 );
 
-// Global rate limiter
-app.use(
-  rateLimit({
-    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
-    max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { success: false, message: "Too many requests. Try again later." },
-  }),
-);
-
-// Stricter limiter for auth
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10,
-  message: {
-    success: false,
-    message: "Too many auth attempts. Try again in 15 minutes.",
-  },
-});
-
 // ── General Middleware
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
@@ -73,7 +51,7 @@ if (process.env.NODE_ENV !== "test") {
   app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 }
 
-//  Health Check
+// ── Health Check
 app.get("/health", (req, res) => {
   res.status(200).json({
     success: true,
@@ -85,22 +63,20 @@ app.get("/health", (req, res) => {
   });
 });
 
-// Routes
-app.use("/api/auth", authLimiter, authRoutes);
+// ── Routes
+app.use("/api/auth", authRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/tasks", taskRoutes);
 
-//  Error Handlers
+// ── Error Handlers
 app.use(notFound);
 app.use(errorHandler);
 
-// Start
+// ── Start Server
 const startServer = async () => {
-  await connectDB(); // Connect to MongoDB first
+  await connectDB();
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(
-      `\n Server running on port ${PORT} [${process.env.NODE_ENV}]`,
-    );
+    console.log(`\n Server running on port ${PORT} [${process.env.NODE_ENV}]`);
     console.log(` Database: MongoDB`);
     console.log(` Health:   http://localhost:${PORT}/health`);
     console.log(` API:      http://localhost:${PORT}/api\n`);
